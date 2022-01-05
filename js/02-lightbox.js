@@ -6,6 +6,12 @@ const galleryMarkup = galleryItems.map(createGalleryItemMarkup).join("");
 
 galleryRef.innerHTML = galleryMarkup;
 
+if ("loading" in HTMLImageElement.prototype) {
+  setImgSrc();
+} else {
+  createLazySizesScript();
+}
+
 const lightboxOptions = {
   captions: true,
   captionSelector: "img",
@@ -18,7 +24,23 @@ let gallery = new SimpleLightbox(".gallery a", lightboxOptions);
 function createGalleryItemMarkup({ preview, original, description }) {
   return `
 <a class="gallery__item" href="${original}">
-  <img class="gallery__image" src="${preview}" alt="${description}" />
+  <img class="gallery__image lazyload" loading="lazy" data-src="${preview}" alt="${description}" />
 </a>
 `;
+}
+function setImgSrc() {
+  const images = document.querySelectorAll('img[loading="lazy"]');
+  images.forEach((img) => {
+    img.src = img.dataset.src;
+  });
+}
+function createLazySizesScript() {
+  const script = document.createElement("script");
+  script.src =
+    "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js";
+  script.integrity =
+    "sha512-q583ppKrCRc7N5O0n2nzUiJ+suUv7Et1JGels4bXOaMFQcamPk9HjdUknZuuFjBNs7tsMuadge5k9RzdmO+1GQ==";
+  script.crossOrigin = "anonymous";
+  script.referrerpolicy = "no-referrer";
+  document.body.appendChild(script);
 }

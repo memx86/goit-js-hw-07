@@ -5,6 +5,11 @@ const galleryRef = document.querySelector(".gallery");
 const galleryMarkup = galleryItems.map(createGalleryItemMarkup).join("");
 
 galleryRef.innerHTML = galleryMarkup;
+if ("loading" in HTMLImageElement.prototype) {
+  setImgSrc();
+} else {
+  createLazySizesScript();
+}
 galleryRef.addEventListener("click", onGalleryImageClick);
 
 function createGalleryItemMarkup({ preview, original, description }) {
@@ -12,8 +17,9 @@ function createGalleryItemMarkup({ preview, original, description }) {
 <div class="gallery__item">
   <a class="gallery__link" href="${original}">
     <img
-      class="gallery__image"
-      src="${preview}"
+      class="gallery__image lazyload"
+      loading="lazy"
+      data-src="${preview}"
       data-source="${original}"
       alt="${description}"
     />
@@ -51,4 +57,20 @@ function onEscPress(e) {
 function onModalCLose() {
   document.removeEventListener("keydown", onEscPress);
   delete document.modal;
+}
+function setImgSrc() {
+  const images = document.querySelectorAll('img[loading="lazy"]');
+  images.forEach((img) => {
+    img.src = img.dataset.src;
+  });
+}
+function createLazySizesScript() {
+  const script = document.createElement("script");
+  script.src =
+    "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js";
+  script.integrity =
+    "sha512-q583ppKrCRc7N5O0n2nzUiJ+suUv7Et1JGels4bXOaMFQcamPk9HjdUknZuuFjBNs7tsMuadge5k9RzdmO+1GQ==";
+  script.crossOrigin = "anonymous";
+  script.referrerpolicy = "no-referrer";
+  document.body.appendChild(script);
 }
