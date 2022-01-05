@@ -4,7 +4,7 @@ import { galleryItems } from "./gallery-items.js";
 const galleryRef = document.querySelector(".gallery");
 const galleryMarkup = galleryItems.map(createGalleryItemMarkup).join("");
 
-galleryRef.insertAdjacentHTML("beforeend", galleryMarkup);
+galleryRef.innerHTML = galleryMarkup;
 
 const lightboxOptions = {
   captions: true,
