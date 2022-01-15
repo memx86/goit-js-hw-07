@@ -3,6 +3,7 @@ import { galleryItems } from "./gallery-items.js";
 
 const galleryRef = document.querySelector(".gallery");
 const galleryMarkup = galleryItems.map(createGalleryItemMarkup).join("");
+let instance;
 
 galleryRef.innerHTML = galleryMarkup;
 if ("loading" in HTMLImageElement.prototype) {
@@ -33,7 +34,7 @@ function onGalleryImageClick(e) {
     return;
   }
   const imageSrc = e.target.dataset.source;
-  const instance = basicLightbox.create(
+  instance = basicLightbox.create(
     `
     <img src="${imageSrc}" width="800" height="600">
 `,
@@ -42,7 +43,6 @@ function onGalleryImageClick(e) {
       onClose: onModalCLose,
     }
   );
-  document.modal = instance;
   instance.show();
 }
 function onModalShow() {
@@ -52,11 +52,10 @@ function onEscPress(e) {
   if (e.code !== "Escape") {
     return;
   }
-  document.modal.close();
+  instance.close();
 }
 function onModalCLose() {
   document.removeEventListener("keydown", onEscPress);
-  delete document.modal;
 }
 function setImgSrc() {
   const images = document.querySelectorAll('img[loading="lazy"]');
