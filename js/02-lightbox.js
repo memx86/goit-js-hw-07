@@ -19,7 +19,7 @@ const lightboxOptions = {
   captionsData: "alt",
   captionDelay: 250,
 };
-let gallery = new SimpleLightbox(".gallery a", lightboxOptions);
+let gallery = new SimpleLightbox(".gallery__item", lightboxOptions);
 
 function createGalleryItemMarkup({ preview, original, description }) {
   return `
